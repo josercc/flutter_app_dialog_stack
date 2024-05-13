@@ -1,39 +1,55 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+## 怎么使用
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
-
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+### 创建一个简单的`Dialog`
 
 ```dart
-const like = 'sample';
+class TestDialog extends AppDialog {
+  /// 是否允许弹出
+  @override
+  Future<bool> get allowShow => Future.value(true);
+
+  /// 提前需要初始化的数据
+  @override
+  Future<void> preInit() async {}
+
+  /// 执行弹出的逻辑
+  @override
+  Future<void> show() async {}
+}
+
 ```
 
-## Additional information
+### 立即进行弹出弹框
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```dart
+final dialog = TestDialog();
+
+/// 
+AppDialogStackManager()..push(dialog,1)..alert();
+```
+
+### 同时弹出设置优先级
+
+```dart
+final dialog1 = TestDialog();
+final dialog2 = TestDialog();
+
+/// 此时会先展示dialog2再展示dialog1
+AppDialogStackManager()..push(dialog1,1)..push(dialog2,2)..alert();
+```
+
+### 只展示一次
+
+```dart
+/// 此时只会弹出TestDialog一次 默认采用类名字判断但是你可以使用where:(dialog) => 进行自定义判断
+AppDialogStackManager()..push(TestDialog())..alert();
+AppDialogStackManager()..push(TestDialog())..alert();
+```
+
+### 延后弹出
+
+```dart
+AppDialogStackManager()..push(TestDialog());
+// 模拟延后操作
+AppDialogStackManager()..alertWhere()
+```
